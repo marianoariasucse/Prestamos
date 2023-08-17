@@ -8,6 +8,16 @@ use Illuminate\Http\Request;
 
 class PrestamoController extends Controller
 {
+
+    public function index()
+    {
+        $user = auth()->user()->id;
+
+        $prestamos = Prestamo::all();
+
+        return view('prestamos.index', compact('prestamos'));
+    }
+
     public function create()
     {
         return view('prestamos.create');
@@ -40,10 +50,6 @@ class PrestamoController extends Controller
         $user = auth()->user()->id;
 
         $prestamo = Prestamo::findOrFail($id);
-
-        // if($prestamo->cliente->user_id != $user->id) {
-        //     return redirect()->route('home');
-        // }
 
         $pagos = Pago::where('prestamo_id', $id)->get();
 

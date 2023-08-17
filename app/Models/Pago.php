@@ -29,4 +29,8 @@ class Pago extends Model
         return $this->belongsTo(Prestamo::class);
     }
 
+    protected $casts = [
+        'estado' => 'boolean',
+    ];
+
 }

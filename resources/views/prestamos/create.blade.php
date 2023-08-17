@@ -9,7 +9,6 @@
                 <label for="cliente_dni">DNI Cliente:</label>
                 <div class="d-flex gap-3">
                     <input type="number" name="cliente_dni" id="cliente_dni" class="form-control" required>
-                    <button class="btn btn-primary">Buscar</button>
                 </div>
             </div>
             <div class="form-group">
@@ -25,7 +24,7 @@
                 <input type="number" name="interes" id="interes" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="fecha">Fecha:</label>
+                <label for="fecha">Fecha de Otorgacion:</label>
                 <input type="date" name="fecha" id="fecha" class="form-control" required>
             </div>
             <div class="form-group">
@@ -49,8 +48,8 @@
 
                 if(!isNaN(parseFloat(document.getElementById('monto_prestado').value)) || !isNaN(parseInt(document.getElementById('cuotas').value)) || !isNaN(parseFloat(document.getElementById('interes').value)))
                     calcularMontoTotal();
-
             </script>
+            <script src="{{ asset('js/components/BuscarCliente.jsx') }}"></script>
         </form>
     </div>
 @endsection
