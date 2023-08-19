@@ -12,10 +12,6 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Route::get('/register', function () {
-//     // abort(403, 'El registro está cerrado.');
-// });
-
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
