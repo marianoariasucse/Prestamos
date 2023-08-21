@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pago;
+use App\Models\Penalizacion;
 
 class PagoController extends Controller
 {
@@ -14,14 +15,24 @@ class PagoController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $pago = Pago::find($id);
-        $pago->fecha_pago = $request->input('fecha_pago');
-        $pago->pagado = true;
-        $pago->save();
+{
+    $porcentaje_penalizacion = $request->penalizacion;
 
-        return redirect()->route('prestamos.show', $pago->prestamo_id);        
+    $pago = Pago::findOrFail($id);
+
+    // Verificar si hay penalización antes de continuar
+    if ($porcentaje_penalizacion > 0) {
+        $penalizacion = new Penalizacion();
+        $penalizacion->pago_id = $pago->id;
+        $penalizacion->monto = $pago->monto * $porcentaje_penalizacion / 100;
+        $penalizacion->save();
     }
 
+    $pago->fecha_pago = $request->input('fecha_pago');
+    $pago->pagado = true;
+    $pago->save();
+
+    return redirect()->route('prestamos.show', $pago->prestamo_id);
+}
 
 }

@@ -6,6 +6,7 @@ use App\Models\Pago;
 use App\Models\Prestamo;
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Models\Penalizacion;
 
 class PrestamoController extends Controller
 {
@@ -74,6 +75,9 @@ class PrestamoController extends Controller
 
         $pagos = Pago::where('prestamo_id', $id)->get();
 
-        return view('prestamos.show', compact('prestamo', 'pagos'));
+        $penalizaciones = Penalizacion::whereIn('pago_id', $pagos->pluck('id'))->get();
+
+        return view('prestamos.show', compact('prestamo', 'pagos', 'penalizaciones'));
     }
+
 }
