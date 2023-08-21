@@ -11,7 +11,7 @@ class ClienteController extends Controller
 
     public function index()
     {
-        $clientes = Cliente::all();
+        $clientes = Cliente::where('user_id', auth()->user()->id)->get();
 
         return view('clientes.index', compact('clientes'));
     }
@@ -44,7 +44,7 @@ class ClienteController extends Controller
 
     public function show($id)
     {
-        $cliente = Cliente::find($id);
+        $cliente = Cliente::where('user_id', auth()->user()->id)->findOrFail($id);
 
         return view('clientes.show', ['cliente' => $cliente]);
     }
