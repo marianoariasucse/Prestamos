@@ -23,16 +23,24 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
-        Cliente::create([
-            'nombre' => $request->nombre,
-            'dni' => $request->dni,
-            'email' => $request->email,
-            'telefono' => $request->telefono,
-            'direccion' => $request->direccion,
-        ]);
-
-        return redirect()->route('clientes.show', ['id' => Cliente::all()->last()->id]);
-    }
+        try {
+            // Validación de datos
+            $validatedData = $request->validate([
+                'nombre' => 'required|string|max:255',
+                'dni' => 'required|string|max:255|unique:clientes,dni',
+                'email' => 'email|unique:clientes,email|nullable',
+                'telefono' => 'string|max:255|nullable',
+                'direccion' => 'string|max:255|nullable',
+            ]);
+        
+            $cliente = Cliente::create(array_merge($validatedData, ['user_id' => auth()->user()->id]));
+        
+            return redirect()->route('clientes.show', $cliente);
+        } catch (Illuminate\Validation\ValidationException $e) {
+            // Mostrar los errores al usuario
+            return redirect()->back()->withErrors($e->errors());
+        }
+    }   
 
     public function show($id)
     {

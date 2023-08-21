@@ -16,6 +16,7 @@ class Cliente extends Model
         'email',
         'telefono',
         'direccion',
+        'user_id',
     ];
 
     public function prestamos()

@@ -3,6 +3,10 @@
 @section('content')
     <div class="container">
         <h1 class="mb-3">Clientes</h1>
+        <div class="mb-3">
+            <input type="text" class="form-control" name="" id="searchInput" aria-describedby="helpId"
+                placeholder="Buscar">
+        </div>
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -25,6 +29,21 @@
                 </tbody>
             </table>
         </div>
-        
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const tableRows = document.querySelectorAll('.table tbody tr');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                tableRows.forEach(row => {
+                    const rowData = row.textContent.toLowerCase();
+                    row.style.display = rowData.includes(searchTerm) ? '' : 'none';
+                });
+            });
+        });
+    </script>
 @endsection
