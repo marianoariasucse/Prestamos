@@ -75,9 +75,11 @@ class PrestamoController extends Controller
 
         $pagos = Pago::where('prestamo_id', $id)->get();
 
+        $cuotas_pagadas = $pagos->where('pagado', true)->where('prestamo_id', $id)->count();
+
         $penalizaciones = Penalizacion::whereIn('pago_id', $pagos->pluck('id'))->get();
 
-        return view('prestamos.show', compact('prestamo', 'pagos', 'penalizaciones'));
+        return view('prestamos.show', compact('prestamo', 'pagos', 'penalizaciones', 'cuotas_pagadas'));
     }
 
 }
