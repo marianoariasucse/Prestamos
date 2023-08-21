@@ -6,11 +6,20 @@ use App\Http\Controllers\PagoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+Auth::routes();
+
 Route::get('/', function () {
     return redirect()->route('home');
 });
 
-Auth::routes();
+Route::get('/register', function () {
+    abort(403, 'No tienes permisos para registrarte');
+});
+
+Route::get('/password/reset', function () {
+    abort(403, 'No tienes permisos para cambiar contraseña');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
