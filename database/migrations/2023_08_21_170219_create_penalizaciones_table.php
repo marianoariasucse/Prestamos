@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('penalizaciones', function (Blueprint $table) {
             $table->id();
-            $table->integer('pago_dni');
+            $table->integer('pago_id');
             $table->double('monto');
             $table->timestamps();
         });

@@ -2,6 +2,15 @@
 
 @section('content')
     <div class="container">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <h2 class="mb-3 mt-2">Generar Prestamo</h2>
         <form action="{{ route('prestamos.store') }}" method="POST">
             @csrf
@@ -24,32 +33,44 @@
                 <input type="number" name="interes" id="interes" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="fecha">Fecha de Otorgacion:</label>
-                <input type="date" name="fecha" id="fecha" class="form-control" required>
+                <label>Fecha de Otorgacion</label>
+                <input type="date" name="fecha" id="fechs" class="form-control" value="{{ now()->toDateString() }}"
+                    required>
             </div>
+            <!-- Eliminamos el campo 'monto_ha_pagar' ya que se calcula automáticamente -->
             <div class="form-group">
-                <label>Monto Total a Pagar: <span id="montoTotal"></span></label>
+                <label>Monto Total a Pagar:</label>
+                <span id="montoTotal"></span>
+                <!-- Agregamos un campo oculto para enviar el monto calculado al servidor -->
+                <input type="hidden" name="monto_ha_pagar" id="monto_ha_pagar">
             </div>
             <button type="submit" class="btn btn-primary">Guardar</button>
-            <script>
-                function calcularMontoTotal() {
-                    const montoPrestado = parseFloat(document.getElementById('monto_prestado').value);
-                    const cuotas = parseInt(document.getElementById('cuotas').value);
-                    const intereses = parseFloat(document.getElementById('interes').value);
-
-                    const montoTotal = montoPrestado + (montoPrestado * (intereses / 100));
-
-                    document.getElementById('montoTotal').textContent = `$${montoTotal.toFixed(2)}, en ${cuotas} cuotas de $${(montoTotal / cuotas).toFixed(2)}`
-                }
-
-                document.getElementById('monto_prestado').addEventListener('change', calcularMontoTotal);
-                document.getElementById('cuotas').addEventListener('change', calcularMontoTotal);
-                document.getElementById('interes').addEventListener('change', calcularMontoTotal);
-
-                if(!isNaN(parseFloat(document.getElementById('monto_prestado').value)) || !isNaN(parseInt(document.getElementById('cuotas').value)) || !isNaN(parseFloat(document.getElementById('interes').value)))
-                    calcularMontoTotal();
-            </script>
-            <script src="{{ asset('js/components/BuscarCliente.jsx') }}"></script>
         </form>
     </div>
+
+    <script>
+        function calcularMontoTotal() {
+            const montoPrestado = parseFloat(document.getElementById('monto_prestado').value);
+            const cuotas = parseInt(document.getElementById('cuotas').value);
+            const intereses = parseFloat(document.getElementById('interes').value);
+
+            if (!isNaN(montoPrestado) && !isNaN(cuotas) && !isNaN(intereses)) {
+                const montoTotal = montoPrestado + (montoPrestado * (intereses / 100));
+                document.getElementById('montoTotal').textContent =
+                    `$${montoTotal.toFixed(2)}, en ${cuotas} cuotas de $${(montoTotal / cuotas).toFixed(2)}`;
+
+                // Actualizamos el valor del campo oculto 'monto_ha_pagar'
+                document.getElementById('monto_ha_pagar').value = montoTotal.toFixed(2);
+            } else {
+                document.getElementById('montoTotal').textContent = "";
+            }
+        }
+
+        document.getElementById('monto_prestado').addEventListener('input', calcularMontoTotal);
+        document.getElementById('cuotas').addEventListener('input', calcularMontoTotal);
+        document.getElementById('interes').addEventListener('input', calcularMontoTotal);
+
+        // Llamar a la función inicialmente
+        calcularMontoTotal();
+    </script>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pago;
 use App\Models\Prestamo;
 use Illuminate\Http\Request;
+use App\Models\Cliente;
 
 class PrestamoController extends Controller
 {
@@ -13,7 +14,7 @@ class PrestamoController extends Controller
     {
         $user = auth()->user()->id;
 
-        $prestamos = Prestamo::all();
+        $prestamos = Prestamo::where('user_id', $user)->get();
 
         return view('prestamos.index', compact('prestamos'));
     }
@@ -25,20 +26,40 @@ class PrestamoController extends Controller
 
     public function store(Request $request)
     {
+
+        //create validations
+        $validatedData = $request->validate([
+            'cliente_dni' => 'required|string|max:8',
+            'monto_prestado' => 'required|numeric',
+            'monto_ha_pagar' => 'required|numeric',
+            'cuotas' => 'required|numeric',
+            'interes' => 'required|numeric',
+            'fecha' => 'required|date',
+        ]);
+
+        //valida que el cliente exista
+        $cliente = Cliente::where('dni', $request->cliente_dni)->where('user_id', auth()->user()->id)->first();
+        if (!$cliente) {
+            return redirect()->back()->withErrors(['cliente_dni' => 'Cliente no registrado']);
+        }
+
+        //crea el prestamo
         $prestamo = new Prestamo();
-        $prestamo->cliente_dni = $request->cliente_dni;
-        $prestamo->monto_prestado = $request->monto_prestado;
-        $prestamo->monto_ha_pagar = $request->monto_prestado + ($request->monto_prestado * $request->interes / 100);
-        $prestamo->cuotas = $request->cuotas;
-        $prestamo->interes = $request->interes;
-        $prestamo->fecha = $request->fecha;
+        $prestamo->fill($validatedData);
+        $prestamo->user_id = auth()->user()->id;
         $prestamo->save();
 
-        for($i = 0; $i < $prestamo->cuotas; $i++) {
+        //crea los pagos
+        $pagos = collect();
+
+        for ($i = 0; $i < $prestamo->cuotas; $i++) {
             $pago = new Pago();
             $pago->cliente_dni = $request->cliente_dni;
             $pago->prestamo_id = $prestamo->id;
             $pago->monto = $prestamo->monto_ha_pagar / $prestamo->cuotas;
+            $pagos->push($pago);
+    
+            // Guarda el pago individual en la base de datos
             $pago->save();
         }
 
@@ -49,7 +70,7 @@ class PrestamoController extends Controller
     {
         $user = auth()->user()->id;
 
-        $prestamo = Prestamo::findOrFail($id);
+        $prestamo = Prestamo::where('user_id', $user)->findOrFail($id);
 
         $pagos = Pago::where('prestamo_id', $id)->get();
 

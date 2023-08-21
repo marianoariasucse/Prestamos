@@ -16,6 +16,7 @@ class Prestamo extends Model
         'cuotas',
         'interes',
         'fecha',
+        'user_id',
     ];
 
     protected $table = 'prestamos';
