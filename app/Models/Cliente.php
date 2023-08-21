@@ -22,4 +22,9 @@ class Cliente extends Model
     {
         return $this->hasMany(Prestamo::class, 'cliente_dni', 'dni');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

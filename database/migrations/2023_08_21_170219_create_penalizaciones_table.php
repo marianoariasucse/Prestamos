@@ -11,23 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prestamos', function (Blueprint $table) {
+        Schema::create('penalizaciones', function (Blueprint $table) {
             $table->id();
-            $table->integer('cliente_dni');
-            $table->double('monto_prestado');
-            $table->double('monto_ha_pagar');
-            $table->integer('cuotas');
-            $table->double('interes');
-            $table->date('fecha');
-            $table->integer('user_id');
+            $table->integer('pago_dni');
+            $table->double('monto');
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('prestamos');
+        Schema::dropIfExists('penalizaciones');
     }
 };

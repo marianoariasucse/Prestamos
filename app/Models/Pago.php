@@ -29,6 +29,11 @@ class Pago extends Model
         return $this->belongsTo(Prestamo::class);
     }
 
+    public function penalizacion()
+    {
+        return $this->hasOne(Penalizacion::class);
+    }
+
     protected $casts = [
         'estado' => 'boolean',
     ];
