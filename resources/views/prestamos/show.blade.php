@@ -20,7 +20,6 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Monto</th>
-                            <th scope="col">Estado</th>
                             <th scope="col">Penalizacion</th>
                             <th scope="col">Fecha de Pago</th>
                             <th></th>
@@ -28,16 +27,9 @@
                     </thead>
                     <tbody>
                         @foreach ($pagos as $pago)
-                            <tr>
+                            <tr class="{{ $pago->pagado ? 'bg-teal' : '' }}">
                                 <th scope="row">{{ $pago->id }}</th>
                                 <td>${{ $pago->monto }}</td>
-                                <td>
-                                    @if ($pago->pagado)
-                                        <span class="badge badge-success">Pagado</span>
-                                    @else
-                                        <span class="badge badge-danger">Pendiente</span>
-                                    @endif
-                                </td>
                                 <td>
                                     @foreach ($penalizaciones as $penalizacion)
                                         @if ($penalizacion->pago_id === $pago->id)

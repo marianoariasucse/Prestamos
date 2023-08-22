@@ -21,12 +21,12 @@
                 </thead>
                 <tbody>
                     @foreach ($prestamos as $prestamo)
-                        <tr>
+                        <tr class="{{ $prestamo->pagado ? 'bg-teal' : '' }}">
                             <td>{{ $prestamo->cliente->nombre }} - {{ $prestamo->cliente->dni }}</td>
                             <td>${{ $prestamo->monto_prestado }}</td>
                             <td>{{ $prestamo->fecha }}</td>
                             <td>
-                                <button class="btn btn-primary">
+                                <button class="btn p-1 {{ $prestamo->pagado ? 'bg-light' : 'btn-primary' }}">
                                     <a href="{{ route('prestamos.show', $prestamo->id) }}" class="text-white">Ver</a>
                                 </button>
                             </td>

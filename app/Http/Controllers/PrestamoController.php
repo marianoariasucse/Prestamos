@@ -15,7 +15,7 @@ class PrestamoController extends Controller
     {
         $user = auth()->user()->id;
 
-        $prestamos = Prestamo::where('user_id', $user)->get();
+        $prestamos = Prestamo::where('user_id', $user)->orderBy('id', 'desc')->get();
 
         return view('prestamos.index', compact('prestamos'));
     }

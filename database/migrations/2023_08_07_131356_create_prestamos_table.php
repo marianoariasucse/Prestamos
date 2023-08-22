@@ -20,6 +20,7 @@ return new class extends Migration
             $table->double('interes');
             $table->date('fecha');
             $table->integer('user_id');
+            $table->boolean('pagado')->default(false);
             $table->timestamps();
         });
     }
