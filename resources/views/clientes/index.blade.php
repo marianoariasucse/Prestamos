@@ -13,8 +13,8 @@
                     <tr>
                         <td>DNI</td>
                         <td>Nombre</td>
-                        <td>Email</td>
                         <td>Telefono</td>
+                        <td></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,8 +22,12 @@
                     <tr>
                         <td>{{ $cliente->dni }}</td>
                         <td>{{ $cliente->nombre }}</td>
-                        <td>{{ $cliente->email }}</td>
                         <td>{{ $cliente->telefono }}</td>
+                        <td>
+                            <button class="btn btn-primary">
+                                <a href="{{ route('clientes.show', $cliente->id) }}" class="text-white">Ver</a>
+                            </button>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

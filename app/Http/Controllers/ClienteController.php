@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\Pago;
 use Illuminate\Http\Request;
+use App\Models\Penalizacion;
 
 class ClienteController extends Controller
 {
@@ -46,6 +47,10 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::where('user_id', auth()->user()->id)->findOrFail($id);
 
-        return view('clientes.show', ['cliente' => $cliente]);
+        $pagos = Pago::where('cliente_dni', $cliente->dni)->orderBy('id', 'desc')->get();
+
+        $penalizaciones = Penalizacion::whereIn('pago_id', $pagos->pluck('id'))->get();
+
+        return view('clientes.show', compact('cliente', 'pagos', 'penalizaciones'));
     }
 }
