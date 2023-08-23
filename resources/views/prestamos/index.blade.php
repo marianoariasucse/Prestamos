@@ -11,8 +11,8 @@
             <div>
                 <select id="filterSelect" class="custom-select">
                     <option value="all">Todos</option>
-                    <option value="pagados">Pagados</option>
-                    <option value="no_pagados">No Pagados</option>
+                    <option value="pagados">Cancelados</option>
+                    <option value="no_pagados">No Cancelados</option>
                 </select>
             </div>
             <div class="mt-3">
