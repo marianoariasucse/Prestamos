@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Pago;
 use Illuminate\Http\Request;
 use App\Models\Penalizacion;
+use Illuminate\Validation\Rule;
 
 class ClienteController extends Controller
 {
@@ -28,7 +29,14 @@ class ClienteController extends Controller
             // Validación de datos
             $validatedData = $request->validate([
                 'nombre' => 'required|string|max:255',
-                'dni' => 'required|string|max:255|unique:clientes,dni',
+                'dni' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('clientes', 'dni')->where(function ($query) {
+                        return $query->where('user_id', auth()->user()->id);
+                    }),
+                ],
                 'email' => 'email|unique:clientes,email|nullable',
                 'telefono' => 'string|max:255|nullable',
                 'direccion' => 'string|max:255|nullable',
